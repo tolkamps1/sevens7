@@ -1,8 +1,8 @@
-## Sevens Card Game
+# Sevens Card Game
 
 Sevens is a card game for 3-8 people. This implementation is played on one device through a web app.
 
-# Motivation
+## Motivation
 
 This is an implementation of the Sevens card game (also known as card dominoes) for the cmd-f 2020 hackathon. This inspiration for creating an online card game came from the countless times we forgot to bring a card deck on the ferry.
 
