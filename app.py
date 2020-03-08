@@ -112,16 +112,9 @@ def play_card():
 
 @app.route('/givecard', methods=['POST'])
 def give_card():
-    data = request.form
-    suit = ''
-    number = ''
-    print(data)
-    for k,i in enumerate(data.values()):
-        print(i)
-        if k == 0:
-            suit = i
-        else: 
-            number = i
+    data = request.json
+    suit = data["card_suit"]
+    number = data["card_value"]
     player_id = board.get_current_id()
     hands.update_hands(suit, number, player_id)
     board.jump_forward(player_id)

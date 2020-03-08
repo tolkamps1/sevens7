@@ -93,6 +93,9 @@ def lay_card_down(suit, num, player_id):
 def update_hands(suit, num, player_id):
     count = players.get_player_count()
     taker = player_id % count + 1
+    print(player_id)
+    print(suit)
+    print(num)
     conn = db.get_db()
     curs = conn.cursor()
     rows = curs.execute("SELECT {} FROM hands WHERE player_id={};".format(suit, player_id)).fetchone()
