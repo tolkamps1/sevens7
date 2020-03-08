@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Tetris Games</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- UIkit CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.0.0-beta.42/css/uikit.min.css" />
+    <!-- UIkit JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.0.0-beta.42/js/uikit.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.0.0-beta.42/js/uikit-icons.min.js"></script>
+</head>
+<style>
+    .small-shadow {
+        box-shadow: 0 5px 10px rgba(0, 0, 0, .08);
+    }
+
+    .link {
+        background: none !important;
+        color: inherit;
+        border: none;
+        padding: 0 !important;
+        font: inherit;
+        cursor: pointer;
+    }
+</style>
+
+<body style="background-color:  #f0efed;">
+    <!-- Fill page -->
+    <div uk-height-viewport=" ">
+        <!-- Make navbar sticky -->
+        <div uk-sticky="sel-target: .uk-navbar-container; cls-active: uk-navbar-sticky">
+            <!-- Navbar container & style like a card -->
+            <nav class="uk-navbar-container uk-card-default">
+                <!-- Contain navbar contents to 'small' container -->
+                <div class="uk-container uk-container-small">
+                    <!-- Use UiKit navbar component -->
+                    <div uk-navbar class="uk-navbar">
+                        <!-- Push content to left -->
+                        <div class="uk-navbar-left">
+                            <div class="uk-navbar-item">
+                                <h1 class="uk-h2 uk-margin-remove">275 Tetris</h1>
+                            </div>
+                        </div>
+                        <!-- Push content to right -->
+                        <div class="uk-navbar-right">
+                            <div class="uk-navbar-item">
+                                <form method="GET" action="/tetris/games/static" class="uk-search uk-search-default uk-search-navbar">
+                                    <button type="submit" class="uk-search-icon-flip link" uk-search-icon></button>
+                                    <input name="user_id" class="uk-search-input" type="search" placeholder="user_id">
+                                </form>
+                            </div>
+                            <!-- Apply navbar nav styling -->
+                            <ul class="uk-navbar-nav">
+                                <li class="uk-active">
+                                    <a href="#">Games</a>
+                                </li>
+                                <li>
+                                    <a href="/tetris/accesslogs/static">Logs</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+        </div>
+        <!-- Contain contents to 'small' container -->
+        <div class="uk-container uk-container-small uk-margin-top">
+            <!-- Display in vertical column flexbox -->
+            <div class="uk-flex uk-flex-column uk-flex-middle">
+                <!-- Iterate over games recieved -->
+                {% if games %}
+                <table class="uk-table uk-table-hover">
+                    <thead>
+                        <!-- Make table head appear as a card -->
+                        <tr class="uk-width-1-1 uk-margin-top uk-card uk-card-default uk-animation-fade">
+                            <th>Date</th>
+                            <th>User</th>
+                            <th>GameId</th>
+                            <th>Lines</th>
+                            <th>Score</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Iterate over game fields to display -->
+                        {% for game in games %} {% if game['score'] != 0 %}
+                        <!-- Make each table row appear as a card -->
+                        <tr class="uk-width-1-1 uk-margin-top uk-card uk-card-default small-shadow uk-animation-fade">
+                            <td>{{ game['date']|dt }}</td>
+                            <td>
+                                <a href="/tetris/games/static?user_id={{ game['user'] }}">{{ game['user'] }}</a>
+                            </td>
+                            <td>{{ game['id'] }}</td>
+                            <td>{{ game['lines'] }}</td>
+                            <td>{{ game['score'] }}</td>
+                        </tr>
+                        {% endif %} {% endfor %}
+                    </tbody>
+                </table>
+                {% else %}
+                <div>Oups no games</div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</body>
+
+<script>
+    function querySt(name) {
+        queryString = window.location.search.substring(1);
+        queryParams = queryString.split("&");
+        for (i = 0; i < queryParams.length; i++) {
+            paramName = queryParams[i].split("=");
+            if (paramName[0] == name) {
+                return paramName[1];
+            }
+        }
+    }
+    var user_id = querySt("user_id");
+    if (!!user_id) {
+        document.getElementsByName('user_id')[0].value = user_id;
+    }
+</script>
+
+</html>

@@ -1,0 +1,18 @@
+# OS
+.DS_STORE
+
+# IDEs
+.idea/
+.vscode/
+
+# compiled build output
+flask/
+
+# output & dependencies
+*.sl3
+flask/
+__pycache__
+*.pyc
+
+# personal tokens
+security.txt
