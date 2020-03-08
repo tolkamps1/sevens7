@@ -34,7 +34,6 @@ def create_hand(hand, player_id):
     res = curs.execute("SELECT * FROM hands WHERE player_id=last_insert_rowid()").fetchall()
     return db.hands_row_to_dict(res[0])
 
-
 def find_7_clubs():
     conn = db.get_db()
     curs = conn.cursor()
@@ -47,7 +46,6 @@ def find_7_clubs():
             if int(club) == 7:
                 return b["player_id"]
     return -1
-
 
 def lay_card_down(suit, num, player_id):
     count = players.get_player_count()
@@ -92,14 +90,48 @@ def lay_card_down(suit, num, player_id):
     else:
         raise Exception("Excuse me, wut")
 
-def take_card(player_id):
-    count = player.get_player_count()
-    prev_player = player_id % count - 1
+def update_hands(suit, num, player_id):
+    count = players.get_player_count()
+    taker = player_id % count + 1
     conn = db.get_db()
     curs = conn.cursor()
-    
-
-    
+    rows = curs.execute("SELECT {} FROM hands WHERE player_id={};".format(suit, player_id)).fetchone()
+    conn.commit()
+    if rows[0]:
+        prev_row = rows[0].split(" ")
+        new_row = []
+        for c in prev_row:
+            if c == num:
+                continue
+            new_row.append(c)
+        new_row = " ".join(new_row)
+        print(new_row)
+        print(suit)
+        print(player_id)
+        curs.execute("UPDATE hands SET {}='{}' WHERE player_id={};".format(suit, str(new_row), str(player_id)))   
+        conn.commit()
+    else:
+        raise Exception("Excuse me, wut")
+    hand = get_hand(player_id)
+    print("GIVERS HAND ")
+    print(hand)
+    rows = curs.execute("SELECT {} FROM hands WHERE player_id={};".format(suit, str(taker))).fetchone()
+    conn.commit()
+    if rows[0]:
+        prev_row = rows[0].split(" ")
+        prev_row.append(num)
+        new_row = " ".join(prev_row)
+        print(new_row)
+        print(suit)
+        print(player_id)
+        curs.execute("UPDATE hands SET {}='{}' WHERE player_id={};".format(suit, str(new_row), str(taker)))   
+        conn.commit()
+    else:
+        raise Exception("Excuse me, wut")
+    hand = get_hand(taker)
+    print("TAKERS HAND ")
+    print(hand)
+        
 
 def get_hand(player_id):
     conn = db.get_db()

@@ -76,7 +76,41 @@ card
 '''
 @app.route('/playcard', methods=['POST'])
 def play_card():
-    #print("HELLOOWWW")
+    data = request.form
+    suit = ''
+    number = ''
+    cantgo = "False"
+    print(data)
+    for k,i in enumerate(data.values()):
+        print(i)
+        if k == 0:
+            suit = i
+        if k == 1: 
+            number = i
+        else:
+            cantgo = i
+    print(str(cantgo))
+    player_id = board.get_current_id()
+    if cantgo == "True":
+        board.update_player(player_id)
+    elif board.check_board(suit,number):
+        hands.lay_card_down(suit, number, player_id)
+    else:
+        print("You can't do that, sweetie.")
+
+    game = board.get_game_board()
+    print(game)
+    #game = jsonify(game)
+    print("NEWGAME !!!"+str(game))
+    hand = hands.get_hand(player_id)
+    print("Player")
+    print(player_id)
+    print(hand)
+    player_name = players.get_player_name(player_id)
+    return render_template('gameboard.html', game=game, hand=hand, player_name=player_name)
+
+@app.route('/givecard', methods=['POST'])
+def give_card():
     data = request.form
     suit = ''
     number = ''
@@ -88,11 +122,8 @@ def play_card():
         else: 
             number = i
     player_id = board.get_current_id()
-    if board.check_board(suit,number):
-        hands.lay_card_down(suit, number, player_id)
-    else:
-        hands.take_card(player_id)
-        
+    hands.update_hands(suit, number, player_id)
+    board.jump_forward(player_id)
     game = board.get_game_board()
     print(game)
     #game = jsonify(game)
@@ -101,103 +132,6 @@ def play_card():
     print(hand)
     player_name = players.get_player_name(player_id)
     return render_template('gameboard.html', game=game, hand=hand, player_name=player_name)
-
-
-
-
-'''
-@app.route('/tetris/accesslogs/static', methods=['GET'])
-def static_logs():
-    return render_template('access_logs.html', logs=db.get_access_logs())
-
-@app.route('/tetris/gamestate', methods=['GET'])
-def list_access():
-    """ JSONify global access_log list """
-    return jsonify(db.get_game_state())
-
-@app.route('/tetris/games', methods=['GET'])
-def list_games():
-    """ JSONify global games list """
-    user_id = request.args.get('user_id')
-    print(user_id)
-    if user_id is not None and user_id is not '':
-        user_games = [game for game in db.get_games() if game['user'] == user_id]
-        return jsonify(user_games)
-    return jsonify(db.get_games())
-
-
-@app.route('/tetris/games/<int:game_id>', methods=['PUT'])
-def update_game(game_id):
-    """ Update & store game object """
-    global authorized_tokens
-    if not request.get_json():
-        print("no request.json")
-        abort(400)
-    if not 'score' in request.json or not 'lines' in request.json:
-        print("no score or lines")
-        abort(400)
-    if type(request.json['score']) is not int:
-        print("score is not int")
-        abort(400)
-    if type(request.json['lines']) is not int:
-        print("lines is not int")
-        abort(400)
-    if not request.headers.get('X-SENG275-Authentication'):
-        abort(400)
-
-    auth = request.headers.get('X-SENG275-Authentication')
-    if auth not in authorized_tokens:
-        abort(401)
-
-    updated_game = db.update_game(game_id,
-        request.json.get('score'),
-        request.json.get('lines'),
-        display_user(auth))
-
-    if updated_game:
-        db.add_access_log(game_id, 
-            sys._getframe().f_code.co_name,
-            "PUT",
-            display_user(auth),
-            request.environ.get('HTTP_X_REAL_IP',request.remote_addr),
-            request.headers.get('User-Agent')) 
-        return jsonify(updated_game)
-    else:
-        abort(404)
-
-@app.errorhandler(400)
-def bad_request(error):
-    """ Respond to bad request """
-    return make_response(jsonify({'error': 'Bad Request'}), 400)
-
-@app.errorhandler(401)
-def not_authorized(error):
-    """ Respond to non-authorized request """
-    return make_response(jsonify({'error': 'Not Authorized'}), 401)
-
-@app.errorhandler(404)
-def not_found(error):
-    """ Respond to unfound request """
-    return make_response(jsonify({'error': 'Not found'}), 404)
-
-@app.errorhandler(405)
-def not_allowed(error):
-    """ Respond to disallowed request """
-    return make_response(jsonify({'error': 'Not allowed'}), 405)
-
-
-@app.teardown_appcontext
-def db_cleanup(error):
-    db.close_db()
-    # print("App Teardown Triggered")
-    # print(error)
-
-@app.template_filter('dt')
-def filter_datetime(date, fmt=None):
-    date = date + (datetime.datetime.now() - datetime.datetime.utcnow())
-    return date.strftime("%Y/%m/%d %H:%M:%S")
-
-'''
 
 if __name__ == '__main__':
     # Set SEVENS_DB_NAME env var if not already set

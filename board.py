@@ -1,4 +1,5 @@
 import db
+import players
 
 def create_game_board(player_id):
     print(player_id)
@@ -47,15 +48,12 @@ def check_board(suit, number):
                 return True       
     return False
 
-
-
 def get_current_id():
     conn = db.get_db()
     curs = conn.cursor()
     res = curs.execute("SELECT * FROM board").fetchone()
     print(res)
     return db.board_row_to_dict(res)["cur_player_id"]
-
 
 # Returns strings
 def get_game_board():
@@ -64,3 +62,31 @@ def get_game_board():
     res = curs.execute("SELECT * FROM board").fetchone()
     print("###### "+str(res))
     return db.board_row_to_dict(res)
+
+def update_player(player_id):
+    count = players.get_player_count()
+    prev_player = -1
+    mod = player_id % count
+    if mod == 0:
+        prev_player = count - 1
+    else:
+        prev_player = mod - 1
+    if prev_player == 0:
+        prev_player = count
+
+    conn = db.get_db()
+    curs = conn.cursor()
+    curs.execute("UPDATE board SET cur_player_id={};".format(str(prev_player)))
+    conn.commit()
+    return prev_player
+
+def jump_forward(player_id):
+    count = players.get_player_count()
+    prev_player = player_id % count  + 1
+    prev_player = prev_player % count + 1
+
+    conn = db.get_db()
+    curs = conn.cursor()
+    curs.execute("UPDATE board SET cur_player_id={};".format(str(prev_player)))
+    conn.commit()
+    return prev_player
