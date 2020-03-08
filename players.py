@@ -18,7 +18,6 @@ def get_player_count():
     return rows[0]
 
 
-
 def get_player_hand(id):
     conn = db.get_db()
     curs = conn.cursor()
