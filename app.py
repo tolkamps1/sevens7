@@ -83,6 +83,8 @@ def play_card():
     player_id = board.get_current_id()
     if board.check_board(suit,number):
         hands.lay_card_down(suit, number, player_id)
+    else:
+        hands.take_card(player_id)
     return '<b> SUCCESS!!!!</b>'
 
 

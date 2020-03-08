@@ -56,27 +56,22 @@ def lay_card_down(suit, num, player_id):
     curs = conn.cursor()
     rows = curs.execute("SELECT {} FROM board".format(suit)).fetchone()
     new_row = ''
+    li = []
     if rows[0]:
-        new_row = rows[0].split(" ")
-        new_row.append(num)
-        new_row = " ".join(new_row)
+        if len(str(rows[0])) > 1:
+            li = rows[0].split(" ")
+        else:
+            li.append(str(rows[0]))
+        li.append(num)
+        new_row = " ".join(li)
+            
     else: 
         new_row = str(num)
-    curs.execute("UPDATE board SET {}={}, cur_player_id={};".format(suit, str(new_row), str(next_turn)))
+
+    print(new_row)
+    curs.execute("UPDATE board SET {}='{}', cur_player_id={};".format(str(suit), str(new_row), str(next_turn)))
     conn.commit()
-    '''if suit == 'spades':
-        curs.execute("INSERT INTO board (suit) VALUES (?);", 
-                (str(player_id)))
-        conn.commit()
-    if suit == 'hearts':
-        curs.execute("INSERT INTO board (suit) VALUES (?);", 
-                (str(player_id)))
-        conn.commit()
-    if suit == 'diamonds':
-    curs.execute("INSERT INTO board (suit) VALUES (?);", 
-                (str(player_id)))
-        conn.commit()
-    '''
+
     rows = curs.execute("SELECT * FROM board;").fetchone()
     print("NEWBOARD "+str(rows[0]))
     rows = curs.execute("SELECT {} FROM hands WHERE player_id={};".format(suit, player_id)).fetchone()
@@ -96,5 +91,13 @@ def lay_card_down(suit, num, player_id):
         conn.commit()
     else:
         raise Exception("Excuse me, wut")
+
+def take_card(player_id):
+    count = player.get_player_count()
+    prev_player = player_id % count - 1
+    conn = db.get_db()
+    curs = conn.cursor()
+    
+
     
 
