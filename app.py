@@ -25,6 +25,7 @@ def display_user(auth):
 
 @app.route('/')
 def sanity_check():
+    db.test_db_conn()
     return render_template('index.html')
 
 
@@ -40,7 +41,13 @@ def new_game():
     if next_turn == -1:
         raise Exception(":(")
     print(board.create_game_board(next_turn))
-    return '<b> SUCCESS!!!!</b>'
+    player_id = board.get_current_id()
+    game = board.get_game_board()
+    print(game)
+    hand = hands.get_hand(player_id)
+    print(hand)
+    player_name = players.get_player_name(player_id)
+    return render_template('gameboard.html', game=game, hand=hand, player_name=player_name)
 
 
 def create_hands(count):
@@ -83,7 +90,14 @@ def play_card():
     player_id = board.get_current_id()
     if board.check_board(suit,number):
         hands.lay_card_down(suit, number, player_id)
-    return '<b> SUCCESS!!!!</b>'
+    game = board.get_game_board()
+    print(game)
+    #game = jsonify(game)
+    print("NEWGAME !!!"+str(game))
+    hand = hands.get_hand(player_id)
+    print(hand)
+    player_name = players.get_player_name(player_id)
+    return render_template('gameboard.html', game=game, hand=hand, player_name=player_name)
 
 
 
@@ -183,7 +197,7 @@ def filter_datetime(date, fmt=None):
 '''
 
 if __name__ == '__main__':
-    # Set TETRIS_DB_NAME env var if not already set
+    # Set SEVENS_DB_NAME env var if not already set
     print("\n+ Setting up app prerequisites..")
     if not os.environ.get("SEVENS_DB_NAME"):
         print("Setting 'SEVENS_DB_NAME' env variable to: sevensdb")

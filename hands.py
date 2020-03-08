@@ -98,3 +98,9 @@ def lay_card_down(suit, num, player_id):
         raise Exception("Excuse me, wut")
     
 
+def get_hand(player_id):
+    conn = db.get_db()
+    curs = conn.cursor()
+    res = curs.execute ("SELECT * FROM hands WHERE player_id={}".format(player_id)).fetchone()
+    print("le hand "+str(res))
+    return db.hands_row_to_dict(res)

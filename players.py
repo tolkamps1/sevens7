@@ -39,3 +39,10 @@ def create_player(name):
     conn.commit()
     res = curs.execute("SELECT * FROM players WHERE id=last_insert_rowid()").fetchall()
     return db.players_row_to_dict(res[0])
+
+
+def get_player_name(player_id):
+    conn = db.get_db()
+    curs = conn.cursor()
+    res = curs.execute ("SELECT * FROM players WHERE id={}".format(player_id)).fetchone()
+    return db.players_row_to_dict(res)["name"]
