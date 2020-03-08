@@ -25,7 +25,7 @@ def display_user(auth):
 
 @app.route('/')
 def sanity_check():
-    return '<b> Hello World! </b>'
+    return render_template('index.html')
 
 
 @app.route('/newgame', methods=['POST'])
@@ -108,27 +108,6 @@ def list_games():
         return jsonify(user_games)
     return jsonify(db.get_games())
 
-@app.route('/tetris/games/static', methods=['GET'])
-def static_games():
-    user_id = request.args.get('user_id')
-    print(user_id)
-    if user_id is not None and user_id is not '':
-        user_games = [game for game in db.get_games() if game['user'] == user_id]
-        return render_template('games.html', games=user_games)
-    return render_template('games.html', games=db.get_games())
-
-@app.route('/tetris/games', methods=['POST'])
-def create_game():
-    """ Create & store game object """
-    g = db.create_new_game()
-    print('creating game with id:', g['id'])
-    db.add_access_log(g['id'], 
-                      sys._getframe().f_code.co_name, 
-                       "POST",
-                       display_user(request.headers.get('X-SENG-275-Authentication')),
-                       request.environ.get('HTTP_X_REAL_IP', request.remote_addr),
-                       request.headers.get('User-Agent'))
-    return jsonify(g)
 
 @app.route('/tetris/games/<int:game_id>', methods=['PUT'])
 def update_game(game_id):

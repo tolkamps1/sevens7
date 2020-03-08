@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Sevens7 Card Game</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- UIkit CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.0.0-beta.42/css/uikit.min.css" />
+    <line rel="stylesheet" href="../styles/index.css" />
+    <!-- UIkit JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.0.0-beta.42/js/uikit.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.0.0-beta.42/js/uikit-icons.min.js"></script>
+</head>
+
+<body style="background-color:  #f0efed;">
+    <!-- Fill page -->
+    <div uk-height-viewport=" ">
+        <!-- Make navbar sticky -->
+        <div uk-sticky="sel-target: .uk-navbar-container; cls-active: uk-navbar-sticky">
+            <!-- Navbar container & style like a card -->
+            <nav class="uk-navbar-container uk-card-default">
+                <!-- Contain navbar contents to 'small' container -->
+                <div class="uk-container uk-container-small">
+                    <!-- Use UiKit navbar component -->
+                    <div uk-navbar class="uk-navbar">
+                        <!-- Push content to left -->
+                        <div class="uk-navbar-left">
+                            <div class="uk-navbar-item">
+                                <h1 class="uk-h2 uk-margin-remove">Sevens7</h1>
+                            </div>
+                        </div>
+                        <!-- Push content to right -->
+                        <div class="uk-navbar-right">
+                            <!-- Apply navbar nav styling -->
+                            <ul class="uk-navbar-nav">
+                                <li class="uk-active">
+                                    <a href="#">New Game</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+        </div>
+        <!-- Contain contents to 'small' container -->
+        <div class="uk-container uk-container-small uk-margin-top">
+            <!-- Display in vertical column flexbox -->
+            <div class="uk-flex uk-flex-column uk-flex-middle">
+                <!-- Iterate over games recieved -->
+                <form method="POST" action="/newgame" class="uk-search uk-search-default uk-search-form">
+                    <table class="uk-table uk-table-hover">
+                        <!-- Make table head appear as a card -->
+                        <tr class="uk-width-medium-1-2 uk-margin-top uk-card uk-card-default small-shadow uk-animation-fade">
+                            <td>
+                                Player 1
+                            </td>
+                            <td>
+                                <input name="player_name1" class="uk-search-input" type="text" placeholder="Player name" required=true>
+                            </td>
+                        </tr>
+                        <tr class="uk-width-medium-1-2 uk-margin-top uk-card uk-card-default small-shadow uk-animation-fade">
+                            <td>
+                                Player 2
+                            </td>
+                            <td>
+                                <input name="player_name2" class="uk-search-input" type="text" placeholder="Player name" required=true> 
+                            </td>
+
+                        </tr>
+                        <tr class="uk-width-medium-1-2 uk-margin-top uk-card uk-card-default small-shadow uk-animation-fade">
+                             class="uk-width-1-1 uk-margin-top uk-card uk-card-default small-shadow uk-animation-fade">
+                            <td>
+                                Player 3
+                            </td>
+                            <td>
+                                <input name="player_name3" class="uk-search-input" type="text" placeholder="Player name" required=true> 
+                            </td>
+                        </tr>
+                    </table>
+
+                    <input type="submit" class="uk-search-icon-flip link" value="Submit"></button>
+
+
+                </form>
+            </div>
+        </div>
+      
+        </div>
+    </div>
+</body>
+
+<script src="../scripts/index.js"></script>
+
+
+</html>
