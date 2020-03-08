@@ -9,12 +9,20 @@ from flask import g
 import db_init
 
 def test_db_conn():
-    """ Check if db connection can open, create and init db if doesn't already exist """
     dbname = os.environ.get("SEVENS_DB_NAME")
+
+    try:
+        os.remove(dbname)
+    except OSError:
+        pass
+    """ Check if db connection can open, create and init db if doesn't already exist """
+    print("********dbname: "+dbname)
+
     assert dbname is not None
 
     # If db file doesn't exist call the initialize module to create and init
     if not os.path.isfile(dbname):
+        print("!!!!!!!!!dbname: "+dbname)
         db_init.init(dbname)
 
 def get_db():
@@ -29,29 +37,45 @@ def close_db():
     if hasattr(g,'sqlite_db'):
 	    g.sqlite_db.close()
 
-# CREATE TABLE accesslog (id INTEGER, function STRING, method STRING, date DATE, ipaddress INTEGER, useragent STRING, user STRING);
-def game_row_to_dict(row):
-    game = {}
-    game['id'] = row[0]
-    game['rngseed'] = row[1]
-    game['score'] = row[2]
-    game['lines'] = row[3]
-    game['date'] = datetime.datetime.utcfromtimestamp(row[4])
-    game['user'] = row[5]
-    game['haveResult'] = row[6]
-    return game
+#     CREATE TABLE players (id INTEGER PRIMARY KEY AUTOINCREMENT, points INTEGER, name STRING);
+def players_row_to_dict(row):
+    players = {}
+    players['id'] = row[0]
+    players['points'] = row[1]
+    players['name'] = row[2]
+    return players
 
-# CREATE TABLE games (id INTEGER PRIMARY KEY AUTOINCREMENT, rngseed INTEGER, score INTEGER, lines INTEGER, date DATE, user STRING, haveResult BOOLEAN);
-def accesslog_row_to_dict(row):
-    access = {}
-    access['id'] = row[0]
-    access['function'] = row[1]
-    access['method'] = row[2]
-    access['date'] = datetime.datetime.utcfromtimestamp(row[3])
-    access['ipaddress'] = row[4]
-    access['useragent'] = row[5]
-    access['user'] = row[6]
-    return access
+#CREATE TABLE hands (player_id INTEGER FOREIGN KEY, clubs STRING, hearts STRING, diamonds STRING, spades STRING);
+def hands_row_to_dict(row):
+    hands = {}
+    hands['player_id'] = row[0]
+    hands['clubs'] = row[1]
+    hands['hearts'] = row[2]
+    hands['diamonds'] = row[3]
+    hands['spades'] = row[4]
+    return hands
+
+
+# CREATE TABLE board (cur_player_id INTEGER FOREIGN KEY, clubs STRING, hearts STRING, diamonds STRING, spades STRING);
+def board_row_to_dict(row):
+    board = {}
+    board['cur_player_id'] = row[0]
+    board['clubs'] = row[1]
+    board['hearts'] = row[2]
+    board['diamonds'] = row[3]
+    board['spades'] = row[4]
+    return board
+
+
+def get_game_state():
+    conn = get_db()
+    curs = conn.cursor()
+    rows = curs.execute ("SELECT * FROM board").fetchall()
+    board = []
+    for row in rows:
+        b = board_row_to_dict(row)
+        board.append(b)
+    return board
 
 def get_games():
     conn = get_db()
@@ -63,15 +87,9 @@ def get_games():
         games.append(game)
     return games
 
-def create_new_game():
-    conn = get_db()
-    curs = conn.cursor()
-    curs.execute("INSERT INTO games (rngseed, score, lines, date, user, haveResult) VALUES (?,?,?,?,?,?);", 
-                (get_rng_seed(), 0, 0, time.time(),"",False))
-    conn.commit()
-    res = curs.execute("SELECT * FROM games WHERE id=last_insert_rowid()").fetchall()
-    return game_row_to_dict(res[0])
 
+
+'''
 def update_game(gameid,score,lines,user):
     conn = get_db()
     curs = conn.cursor()
@@ -105,3 +123,4 @@ def get_access_logs():
 def get_rng_seed():
     """ Generate rng seed """
     return 0xDEADBEEF
+'''

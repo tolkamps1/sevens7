@@ -2,10 +2,14 @@
 import sys
 import datetime
 import os
+import itertools, random
 
 from flask import Flask, jsonify, make_response, request, abort, render_template, g
 
 import db
+import players
+import hands
+import board
 
 app = Flask(__name__)
 authorized_tokens = {}
@@ -23,14 +27,76 @@ def display_user(auth):
 def sanity_check():
     return '<b> Hello World! </b>'
 
+
+@app.route('/newgame', methods=['POST'])
+def new_game():
+    data = request.form
+    for player in data.values():
+        print(players.create_player(player))
+    print(data)
+    create_hands(players.get_player_count())
+    next_turn = hands.find_7_clubs()
+    print(next_turn)
+    if next_turn == -1:
+        raise Exception(":(")
+    print(board.create_game_board(next_turn))
+    return '<b> SUCCESS!!!!</b>'
+
+
+def create_hands(count):
+    print("COUNT: "+str(count))
+    deck = list(itertools.product(range(1,14),['spades','hearts','diamonds','clubs']))
+    random.shuffle(deck)
+
+    per_player = (int) (52/count)
+    i = 0
+    leftover = count % 52
+    for x in range(count):
+        print("HII "+str(x))
+        hand = deck[i:(i+per_player)]
+        print(i)
+        
+        if leftover != 0:
+            hand.append(deck[52-leftover])
+            leftover -= 1
+        print(hands.create_hand(hand, x+1))
+        hand = []
+        i = i+per_player
+
+
+'''
+card
+'''
+@app.route('/playcard', methods=['POST'])
+def play_card():
+    #print("HELLOOWWW")
+    data = request.form
+    suit = ''
+    number = ''
+    print(data)
+    for k,i in enumerate(data.values()):
+        print(i)
+        if k == 0:
+            suit = i
+        else: 
+            number = i
+    player_id = board.get_current_id()
+    if board.check_board(suit,number):
+        hands.lay_card_down(suit, number, player_id)
+    return '<b> SUCCESS!!!!</b>'
+
+
+
+
+'''
 @app.route('/tetris/accesslogs/static', methods=['GET'])
 def static_logs():
     return render_template('access_logs.html', logs=db.get_access_logs())
 
-@app.route('/tetris/accesslogs', methods=['GET'])
+@app.route('/tetris/gamestate', methods=['GET'])
 def list_access():
     """ JSONify global access_log list """
-    return jsonify(db.get_access_logs())
+    return jsonify(db.get_game_state())
 
 @app.route('/tetris/games', methods=['GET'])
 def list_games():
@@ -135,6 +201,8 @@ def filter_datetime(date, fmt=None):
     date = date + (datetime.datetime.now() - datetime.datetime.utcnow())
     return date.strftime("%Y/%m/%d %H:%M:%S")
 
+'''
+
 if __name__ == '__main__':
     # Set TETRIS_DB_NAME env var if not already set
     print("\n+ Setting up app prerequisites..")
@@ -143,7 +211,7 @@ if __name__ == '__main__':
         os.environ["SEVENS_DB_NAME"] = 'sevensdb'
     else:
         print("'SEVENS_DB_NAME' env variable already set to: ", os.environ["SEVENS_DB_NAME"])
-    
+
     # Test db & build if doesn't exist
     db.test_db_conn()
 

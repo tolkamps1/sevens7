@@ -15,24 +15,33 @@ def init(dbname):
     curs = conn.cursor()
 
     # Double check tables don't already exist, quit if so
-    tab = curs.execute ("SELECT * FROM sqlite_master WHERE type='table' AND name='games'").fetchall()
+    tab = curs.execute ("SELECT * FROM sqlite_master WHERE type='table' AND name='players'").fetchall()
     if len(tab) > 0:
-        print("table games exists in current directory.")
+        print("table players exists in current directory.")
         print("Please delete ", dbname, " before running this script.")
         sys.exit(0)
 
-    tab = curs.execute ("SELECT * FROM sqlite_master WHERE type='table' AND name='accesslog'").fetchall()
+    tab = curs.execute ("SELECT * FROM sqlite_master WHERE type='table' AND name='hands'").fetchall()
     if len(tab) > 0:
-        print("table accesslog exists in current directory.")
+        print("table hands exists in current directory.")
+        print("Please delete ", dbname, " before running this script.")
+        sys.exit(0)
+
+    tab = curs.execute ("SELECT * FROM sqlite_master WHERE type='table' AND name='board'").fetchall()
+    if len(tab) > 0:
+        print("table board exists in current directory.")
         print("Please delete ", dbname, " before running this script.")
         sys.exit(0)
 
     # Create tables
     curs.executescript("""
-    CREATE TABLE games (id INTEGER PRIMARY KEY AUTOINCREMENT, rngseed INTEGER, score INTEGER, lines INTEGER, date DATE, user STRING, haveResult BOOLEAN);
+    CREATE TABLE players (id INTEGER PRIMARY KEY AUTOINCREMENT, points INTEGER, name STRING);
     """)
     curs.executescript("""
-    CREATE TABLE accesslog (id INTEGER, function STRING, method STRING, date DATE, ipaddress INTEGER, useragent STRING, user STRING);
+    CREATE TABLE hands (player_id INTEGER , clubs STRING, hearts STRING, diamonds STRING, spades STRING, FOREIGN KEY (player_id) REFERENCES players(id));
+    """)
+    curs.executescript("""
+    CREATE TABLE board (cur_player_id INTEGER, clubs STRING, hearts STRING, diamonds STRING, spades STRING, FOREIGN KEY (cur_player_id) REFERENCES players(id));
     """)
 
 def drop_database(dbname):
