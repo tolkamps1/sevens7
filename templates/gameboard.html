@@ -34,7 +34,7 @@
                         <div class="uk-navbar-right">
                             <!-- Apply navbar nav styling -->
                             <ul class="uk-navbar-nav">
-                                <li class="uk-active">
+                                <li class="uk-active card">
                                     <a href="/">New Game</a>
                                 </li>
                             </ul>
@@ -43,6 +43,7 @@
                 </div>
             </nav>
         </div>
+        <p hidden id="give_card">{{ give_card }}</p>
         <!-- Contain contents to 'small' container -->
         <div class="uk-container uk-container-medium uk-margin-top">
             <!-- Display in vertical column flexbox -->
@@ -105,6 +106,15 @@
             <div class="uk-flex uk-flex-column uk-flex-middle">
                 <!-- Iterate over games recieved -->
                 <h3>{{ player_name }}'s Turn</h3>
+
+                <div class="uk-navbar-right">
+                    <!-- Apply navbar nav styling -->
+                    <ul class="uk-navbar-nav">
+                        <li class="uk-active card" id="cantgobut" card-suit="" card-value="" cantgo="True">
+                            <a href="#">Can't Go</a>
+                        </li>
+                    </ul>
+                </div>
                 <table class="uk-table uk-table-hover">
                     <!-- Make table head appear as a card -->
                     
@@ -112,7 +122,7 @@
                     {% set clubs = hand['clubs'].split(' ') %}
                     <tr class="uk-width-medium-1-2 uk-margin-top uk-card uk-card-default small-shadow uk-animation-fade">
                         {% for card in clubs %}
-                        <td>
+                        <td class="cards" card-suit="clubs" card-value={{ card }} cantgo="False">
                             Club {{ card }}
                         </td>
                         {% endfor %}
@@ -123,7 +133,7 @@
                     {% set spades = hand['spades'].split(' ') %}
                     <tr class="uk-width-medium-1-2 uk-margin-top uk-card uk-card-default small-shadow uk-animation-fade">
                         {% for card in spades %}
-                        <td>
+                        <td class="cards" card-suit="spades" card-value={{ card }} cantgo="False">
                             Spade {{ card }}
                         </td>
                         {% endfor %}
@@ -134,7 +144,7 @@
                     {% set hearts = hand['hearts'].split(' ') %}
                     <tr class="uk-width-medium-1-2 uk-margin-top uk-card uk-card-default small-shadow uk-animation-fade">
                         {% for card in hearts %}
-                        <td>
+                        <td class="cards" card-suit="hearts" card-value={{ card }} cantgo="False">
                             Heart {{ card }}
                         </td>
                         {% endfor %}
@@ -145,7 +155,7 @@
                     {% set diamonds = hand['diamonds'].split(' ') %}
                     <tr class="uk-width-medium-1-2 uk-margin-top uk-card uk-card-default small-shadow uk-animation-fade">
                         {% for card in diamonds %}
-                        <td>
+                        <td class="cards" card-suit="diamonds" card-value={{ card }} cantgo="False">
                             Diamonds {{ card }}
                         </td>
                         {% endfor %}
@@ -160,6 +170,7 @@
     </div>
     <script type="text/javascript"
     src="{{ url_for('static', filename='index.js') }}"></script>
+    <script>addEventListenerstoDoc()</script>
 </body>
 
 

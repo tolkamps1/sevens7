@@ -49,10 +49,10 @@ def players_row_to_dict(row):
 def hands_row_to_dict(row):
     hands = {}
     hands['player_id'] = row[0]
-    hands['clubs'] = row[1]
-    hands['hearts'] = row[2]
-    hands['diamonds'] = row[3]
-    hands['spades'] = row[4]
+    hands['clubs'] = str(row[1])
+    hands['hearts'] = str(row[2])
+    hands['diamonds'] = str(row[3])
+    hands['spades'] = str(row[4])
     return hands
 
 

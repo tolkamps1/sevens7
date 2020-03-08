@@ -3,6 +3,7 @@ import sys
 import datetime
 import os
 import itertools, random
+import json
 
 from flask import Flask, jsonify, make_response, request, abort, render_template, g
 
@@ -76,29 +77,29 @@ card
 '''
 @app.route('/playcard', methods=['POST'])
 def play_card():
-    data = request.form
+    print("HELLOOWWW")
+    give_card=False
+    data = request.json
     suit = ''
     number = ''
     cantgo = "False"
     print(data)
-    for k,i in enumerate(data.values()):
-        print(i)
-        if k == 0:
-            suit = i
-        if k == 1: 
-            number = i
-        else:
-            cantgo = i
-    print(str(cantgo))
+    suit = data["card_suit"]
+    number = data["card_value"]
+    if data["cantgo"]:
+        cantgo = data["cantgo"]
     player_id = board.get_current_id()
     if cantgo == "True":
         board.update_player(player_id)
+        give_card=True
     elif board.check_board(suit,number):
         hands.lay_card_down(suit, number, player_id)
     else:
         print("You can't do that, sweetie.")
 
     game = board.get_game_board()
+    player_id = board.get_current_id()
+
     print(game)
     #game = jsonify(game)
     print("NEWGAME !!!"+str(game))
@@ -107,7 +108,7 @@ def play_card():
     print(player_id)
     print(hand)
     player_name = players.get_player_name(player_id)
-    return render_template('gameboard.html', game=game, hand=hand, player_name=player_name)
+    return render_template('gameboard.html', game=game, hand=hand, player_name=player_name, give_card=give_card)
 
 @app.route('/givecard', methods=['POST'])
 def give_card():
