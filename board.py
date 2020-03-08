@@ -55,3 +55,12 @@ def get_current_id():
     res = curs.execute("SELECT * FROM board").fetchone()
     print(res)
     return db.board_row_to_dict(res)["cur_player_id"]
+
+
+# Returns strings
+def get_game_board():
+    conn = db.get_db()
+    curs = conn.cursor()
+    res = curs.execute("SELECT * FROM board").fetchone()
+    print("###### "+str(res))
+    return db.board_row_to_dict(res)

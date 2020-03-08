@@ -60,10 +60,10 @@ def hands_row_to_dict(row):
 def board_row_to_dict(row):
     board = {}
     board['cur_player_id'] = row[0]
-    board['clubs'] = row[1]
-    board['hearts'] = row[2]
-    board['diamonds'] = row[3]
-    board['spades'] = row[4]
+    board['clubs'] = str(row[1])
+    board['hearts'] = str(row[2])
+    board['diamonds'] = str(row[3])
+    board['spades'] = str(row[4])
     return board
 
 

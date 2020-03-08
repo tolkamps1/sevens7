@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Sevens7 Card Game</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- UIkit CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.0.0-beta.42/css/uikit.min.css" />
+    <line rel="stylesheet" href="../styles/index.css" />
+    <!-- UIkit JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.0.0-beta.42/js/uikit.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.0.0-beta.42/js/uikit-icons.min.js"></script>
+</head>
+
+<body style="background-color:  #f0efed;">
+    <!-- Fill page -->
+    <div uk-height-viewport=" ">
+        <!-- Make navbar sticky -->
+        <div uk-sticky="sel-target: .uk-navbar-container; cls-active: uk-navbar-sticky">
+            <!-- Navbar container & style like a card -->
+            <nav class="uk-navbar-container uk-card-default">
+                <!-- Contain navbar contents to 'small' container -->
+                <div class="uk-container uk-container-small">
+                    <!-- Use UiKit navbar component -->
+                    <div uk-navbar class="uk-navbar">
+                        <!-- Push content to left -->
+                        <div class="uk-navbar-left">
+                            <div class="uk-navbar-item">
+                                <h1 class="uk-h2 uk-margin-remove">Sevens7</h1>
+                            </div>
+                        </div>
+                        <!-- Push content to right -->
+                        <div class="uk-navbar-right">
+                            <!-- Apply navbar nav styling -->
+                            <ul class="uk-navbar-nav">
+                                <li class="uk-active">
+                                    <a href="/">New Game</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+        </div>
+        <!-- Contain contents to 'small' container -->
+        <div class="uk-container uk-container-medium uk-margin-top">
+            <!-- Display in vertical column flexbox -->
+            <div class="uk-flex uk-flex-column uk-flex-middle">
+                <!-- Iterate over games recieved -->
+                <table class="uk-table uk-table-hover">
+                    <!-- Make table head appear as a card -->
+                    
+                    {% if game['clubs'] %}
+                    {% set clubs = game['clubs'].split(' ') %}
+                    <tr class="uk-width-medium-1-2 uk-margin-top uk-card uk-card-default small-shadow uk-animation-fade">
+                        {% for card in clubs %}
+                        <td>
+                            Club {{ card }}
+                        </td>
+                        {% endfor %}
+                    </tr>
+                    {% endif %}
+
+                    {% if game['spades'] %}
+                    {% set spades = game['spades'].split(' ') %}
+                    <tr class="uk-width-medium-1-2 uk-margin-top uk-card uk-card-default small-shadow uk-animation-fade">
+                        {% for card in spades %}
+                        <td>
+                            Spade {{ card }}
+                        </td>
+                        {% endfor %}
+                    </tr>
+                    {% endif %}
+
+                    {% if game['hearts'] %}
+                    {% set hearts = game['hearts'].split(' ') %}
+                    <tr class="uk-width-medium-1-2 uk-margin-top uk-card uk-card-default small-shadow uk-animation-fade">
+                        {% for card in hearts %}
+                        <td>
+                            Heart {{ card }}
+                        </td>
+                        {% endfor %}
+                    </tr>
+                    {% endif %}
+
+                    {% if game['diamonds'] %}
+                    {% set diamonds = game['diamonds'].split(' ') %}
+                    <tr class="uk-width-medium-1-2 uk-margin-top uk-card uk-card-default small-shadow uk-animation-fade">
+                        {% for card in diamonds %}
+                        <td>
+                            Diamonds {{ card }}
+                        </td>
+                        {% endfor %}
+                    </tr>
+                    {% endif %}
+                </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Contain contents to 'small' container -->
+        <div class="uk-container uk-container-medium uk-margin-top">
+            <!-- Display in vertical column flexbox -->
+            <div class="uk-flex uk-flex-column uk-flex-middle">
+                <!-- Iterate over games recieved -->
+                <h3>{{ player_name }}'s Turn</h3>
+                <table class="uk-table uk-table-hover">
+                    <!-- Make table head appear as a card -->
+                    
+                    {% if hand['clubs'] %}
+                    {% set clubs = hand['clubs'].split(' ') %}
+                    <tr class="uk-width-medium-1-2 uk-margin-top uk-card uk-card-default small-shadow uk-animation-fade">
+                        {% for card in clubs %}
+                        <td>
+                            Club {{ card }}
+                        </td>
+                        {% endfor %}
+                    </tr>
+                    {% endif %}
+
+                    {% if hand['spades'] %}
+                    {% set spades = hand['spades'].split(' ') %}
+                    <tr class="uk-width-medium-1-2 uk-margin-top uk-card uk-card-default small-shadow uk-animation-fade">
+                        {% for card in spades %}
+                        <td>
+                            Spade {{ card }}
+                        </td>
+                        {% endfor %}
+                    </tr>
+                    {% endif %}
+
+                    {% if hand['hearts'] %}
+                    {% set hearts = hand['hearts'].split(' ') %}
+                    <tr class="uk-width-medium-1-2 uk-margin-top uk-card uk-card-default small-shadow uk-animation-fade">
+                        {% for card in hearts %}
+                        <td>
+                            Heart {{ card }}
+                        </td>
+                        {% endfor %}
+                    </tr>
+                    {% endif %}
+
+                    {% if hand['diamonds'] %}
+                    {% set diamonds = hand['diamonds'].split(' ') %}
+                    <tr class="uk-width-medium-1-2 uk-margin-top uk-card uk-card-default small-shadow uk-animation-fade">
+                        {% for card in diamonds %}
+                        <td>
+                            Diamonds {{ card }}
+                        </td>
+                        {% endfor %}
+                    </tr>
+                    {% endif %}
+                </table>
+
+
+            </div>
+        </div>
+
+    </div>
+</body>
+
+<script src="../scripts/index.js"></script>
+
+
+</html>
