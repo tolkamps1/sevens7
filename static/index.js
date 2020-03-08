@@ -32,7 +32,7 @@ function play_card(evt){
         cantgo: cantgo.nodeValue
     };
     var url ="/playcard";
-    if(document.getElementById("give_card").innerHTML){
+    if(document.getElementById("give_card").innerHTML == "True"){
         url = '/givecard';
     }
     fetch(url, {
